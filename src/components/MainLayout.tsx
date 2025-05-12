@@ -14,7 +14,7 @@ import {
   SidebarProvider,
   SidebarTrigger
 } from "@/components/ui/sidebar";
-import { Home, Search, Library, Download, Music, LogIn } from 'lucide-react';
+import { Home, Search, Library, Download, Music, LogIn, Share2 } from 'lucide-react';
 import MusicPlayer from './MusicPlayer';
 import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
@@ -57,7 +57,8 @@ const AppSidebar = () => {
     { title: "Search", icon: Search, path: "/search" },
     { title: "Library", icon: Library, path: "/library" },
     { title: "Streaming", icon: Music, path: "/streaming" },
-    { title: "Downloads", icon: Download, path: "/downloads" }
+    { title: "Downloads", icon: Download, path: "/downloads" },
+    { title: "Torrents", icon: Share2, path: "/torrents" }
   ];
 
   return (
