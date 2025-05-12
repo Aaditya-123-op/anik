@@ -31,7 +31,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <div className="p-4 sm:p-6 flex items-center justify-between">
             <SidebarTrigger />
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">Tune Torrent</span>
+              <span className="text-sm font-medium">Anik</span>
             </div>
           </div>
           <div className="flex-1 overflow-auto p-4 sm:p-6">
@@ -56,7 +56,7 @@ const AppSidebar = () => {
     <Sidebar>
       <SidebarHeader className="flex items-center gap-2 px-4">
         <Music className="h-6 w-6 text-primary" />
-        <span className="font-semibold text-lg">TuneTorrent</span>
+        <span className="font-semibold text-lg">Anik</span>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -78,7 +78,7 @@ const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="px-4 py-2 text-xs text-center text-muted-foreground">
-        TuneTorrent Stream &copy; 2025
+        Anik Stream &copy; 2025
       </SidebarFooter>
     </Sidebar>
   );
