@@ -56,6 +56,7 @@ const AppSidebar = () => {
     { title: "Home", icon: Home, path: "/" },
     { title: "Search", icon: Search, path: "/search" },
     { title: "Library", icon: Library, path: "/library" },
+    { title: "Streaming", icon: Music, path: "/streaming" },
     { title: "Downloads", icon: Download, path: "/downloads" }
   ];
 
