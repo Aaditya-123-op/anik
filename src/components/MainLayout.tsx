@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Sidebar,
   SidebarContent,
@@ -14,9 +14,10 @@ import {
   SidebarProvider,
   SidebarTrigger
 } from "@/components/ui/sidebar";
-import { Home, Search, Library, Download, Music } from 'lucide-react';
+import { Home, Search, Library, Download, Music, LogIn } from 'lucide-react';
 import MusicPlayer from './MusicPlayer';
 import { Link } from 'react-router-dom';
+import { Button } from './ui/button';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -30,7 +31,13 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         <main className="flex-1 flex flex-col">
           <div className="p-4 sm:p-6 flex items-center justify-between">
             <SidebarTrigger />
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/login" className="flex items-center gap-2">
+                  <LogIn className="h-4 w-4" />
+                  <span>Login</span>
+                </Link>
+              </Button>
               <span className="text-sm font-medium">Anik</span>
             </div>
           </div>
