@@ -4,26 +4,29 @@ import MainLayout from '@/components/MainLayout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Share2, Download, Music, Search as SearchIcon, Info } from 'lucide-react';
+import { Share2, Download, Music, Search as SearchIcon, Info, Play } from 'lucide-react';
 import { dummySongs, Song } from '@/lib/dummyData';
 import { toast } from 'sonner';
 import { torrentService } from '@/lib/torrentService';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useMusicPlayer } from '@/contexts/MusicPlayerContext';
 
 const Torrents: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchResults, setSearchResults] = useState<Song[]>([]);
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("discover");
+  const { streamSong, isStreaming } = useMusicPlayer();
 
   const popularTorrents = dummySongs.map(song => ({
     ...song,
     seeders: Math.floor(Math.random() * 1000) + 50,
     leechers: Math.floor(Math.random() * 100) + 5,
     size: `${(Math.random() * 10 + 2).toFixed(1)} MB`,
-    quality: Math.random() > 0.5 ? "320 kbps" : "FLAC"
+    quality: Math.random() > 0.5 ? "320 kbps" : "FLAC",
+    magnetUrl: `magnet:?xt=urn:btih:${song.id}&dn=${encodeURIComponent(song.title)}`
   }));
 
   const handleSearch = (e: React.FormEvent) => {
@@ -63,6 +66,20 @@ const Torrents: React.FC = () => {
     });
   };
 
+  const handleStream = async (torrent: typeof popularTorrents[0]) => {
+    try {
+      await streamSong({
+        id: torrent.id,
+        title: torrent.title,
+        artist: torrent.artist,
+        albumArt: torrent.albumArt,
+        magnetUrl: torrent.magnetUrl
+      });
+    } catch (error) {
+      console.error('Stream error:', error);
+    }
+  };
+
   return (
     <MainLayout>
       <div className="max-w-5xl mx-auto space-y-6">
@@ -91,7 +108,13 @@ const Torrents: React.FC = () => {
           <TabsContent value="discover" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {popularTorrents.map((torrent) => (
-                <TorrentCard key={torrent.id} torrent={torrent} onDownload={handleDownload} />
+                <TorrentCard 
+                  key={torrent.id} 
+                  torrent={torrent} 
+                  onDownload={handleDownload}
+                  onStream={handleStream}
+                  isStreaming={isStreaming}
+                />
               ))}
             </div>
           </TabsContent>
@@ -112,7 +135,13 @@ const Torrents: React.FC = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {searchResults.map((torrent) => (
-                <TorrentCard key={torrent.id} torrent={torrent} onDownload={handleDownload} />
+                <TorrentCard 
+                  key={torrent.id} 
+                  torrent={torrent} 
+                  onDownload={handleDownload}
+                  onStream={handleStream}
+                  isStreaming={isStreaming}
+                />
               ))}
             </div>
           </TabsContent>
@@ -128,11 +157,14 @@ interface TorrentCardProps {
     leechers?: number;
     size?: string;
     quality?: string;
+    magnetUrl?: string;
   };
   onDownload: (song: Song) => void;
+  onStream: (torrent: any) => void;
+  isStreaming: boolean;
 }
 
-const TorrentCard: React.FC<TorrentCardProps> = ({ torrent, onDownload }) => {
+const TorrentCard: React.FC<TorrentCardProps> = ({ torrent, onDownload, onStream, isStreaming }) => {
   return (
     <Card>
       <CardContent className="p-4">
@@ -175,14 +207,26 @@ const TorrentCard: React.FC<TorrentCardProps> = ({ torrent, onDownload }) => {
             </div>
           </div>
           
-          <Button 
-            onClick={() => onDownload(torrent)}
-            variant="secondary" 
-            size="sm"
-            className="h-8 flex gap-1 items-center">
-            <Download size={16} />
-            <span>Download</span>
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Button 
+              onClick={() => onStream(torrent)}
+              variant="default" 
+              size="sm"
+              disabled={isStreaming}
+              className="h-8 flex gap-1 items-center">
+              <Play size={16} />
+              <span>{isStreaming ? 'Streaming...' : 'Stream'}</span>
+            </Button>
+            
+            <Button 
+              onClick={() => onDownload(torrent)}
+              variant="secondary" 
+              size="sm"
+              className="h-8 flex gap-1 items-center">
+              <Download size={16} />
+              <span>Download</span>
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
