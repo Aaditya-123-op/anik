@@ -18,12 +18,15 @@ import { Home, Search, Library, Download, Music, LogIn, Share2 } from 'lucide-re
 import MusicPlayer from './MusicPlayer';
 import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
+import { useMusicPlayer } from '@/contexts/MusicPlayerContext';
 
 interface MainLayoutProps {
   children: React.ReactNode;
 }
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+  const { currentSong } = useMusicPlayer();
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -44,7 +47,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <div className="flex-1 overflow-auto p-4 sm:p-6">
             {children}
           </div>
-          <MusicPlayer />
+          <MusicPlayer currentSong={currentSong} />
         </main>
       </div>
     </SidebarProvider>

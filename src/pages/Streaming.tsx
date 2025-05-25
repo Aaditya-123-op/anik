@@ -7,8 +7,21 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Play, Search, Music } from 'lucide-react';
 import { toast } from 'sonner';
+import { useMusicPlayer } from '@/contexts/MusicPlayerContext';
 
-// Dummy data for streaming songs
+// Sample audio URLs (using royalty-free audio for demo)
+const sampleAudioUrls = [
+  "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+  "https://www.soundjay.com/misc/sounds/fail-buzzer-02.wav",
+  "https://www.soundjay.com/misc/sounds/magic-chime-07.wav",
+  "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+  "https://www.soundjay.com/misc/sounds/fail-buzzer-02.wav",
+  "https://www.soundjay.com/misc/sounds/magic-chime-07.wav",
+  "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+  "https://www.soundjay.com/misc/sounds/fail-buzzer-02.wav"
+];
+
+// Dummy data for streaming songs with audio URLs
 const streamingSongs = [
   {
     id: "s1",
@@ -16,7 +29,8 @@ const streamingSongs = [
     artist: "The Weeknd",
     albumArt: "https://images.unsplash.com/photo-1513829596324-4bb2800c5efb?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     genre: "Pop",
-    duration: "3:20"
+    duration: "3:20",
+    audioUrl: sampleAudioUrls[0]
   },
   {
     id: "s2",
@@ -24,7 +38,8 @@ const streamingSongs = [
     artist: "Ed Sheeran",
     albumArt: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     genre: "Pop",
-    duration: "3:53"
+    duration: "3:53",
+    audioUrl: sampleAudioUrls[1]
   },
   {
     id: "s3",
@@ -32,7 +47,8 @@ const streamingSongs = [
     artist: "Tones and I",
     albumArt: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     genre: "Pop",
-    duration: "3:29"
+    duration: "3:29",
+    audioUrl: sampleAudioUrls[2]
   },
   {
     id: "s4",
@@ -40,7 +56,8 @@ const streamingSongs = [
     artist: "Adele",
     albumArt: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     genre: "Pop",
-    duration: "4:45"
+    duration: "4:45",
+    audioUrl: sampleAudioUrls[3]
   },
   {
     id: "s5",
@@ -48,7 +65,8 @@ const streamingSongs = [
     artist: "Queen",
     albumArt: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     genre: "Rock",
-    duration: "5:55"
+    duration: "5:55",
+    audioUrl: sampleAudioUrls[4]
   },
   {
     id: "s6",
@@ -56,7 +74,8 @@ const streamingSongs = [
     artist: "Guns N' Roses",
     albumArt: "https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     genre: "Rock",
-    duration: "5:03"
+    duration: "5:03",
+    audioUrl: sampleAudioUrls[5]
   },
   {
     id: "s7",
@@ -64,7 +83,8 @@ const streamingSongs = [
     artist: "Eminem",
     albumArt: "https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     genre: "Hip Hop",
-    duration: "5:26"
+    duration: "5:26",
+    audioUrl: sampleAudioUrls[6]
   },
   {
     id: "s8",
@@ -72,7 +92,8 @@ const streamingSongs = [
     artist: "50 Cent",
     albumArt: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     genre: "Hip Hop",
-    duration: "3:13"
+    duration: "3:13",
+    audioUrl: sampleAudioUrls[7]
   }
 ];
 
@@ -82,6 +103,7 @@ const genres = ["All", "Pop", "Rock", "Hip Hop", "Electronic", "Classical", "Jaz
 const Streaming: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("All");
+  const { playSong } = useMusicPlayer();
   
   // Filter songs based on search term and selected genre
   const filteredSongs = streamingSongs.filter(song => {
@@ -92,9 +114,15 @@ const Streaming: React.FC = () => {
   });
 
   const handlePlay = (song: typeof streamingSongs[0]) => {
-    toast.success(`Playing ${song.title} by ${song.artist}`, {
-      description: "Streaming service would start playing the song here"
+    playSong({
+      id: song.id,
+      title: song.title,
+      artist: song.artist,
+      albumArt: song.albumArt,
+      audioUrl: song.audioUrl
     });
+    
+    toast.success(`Now playing: ${song.title} by ${song.artist}`);
   };
 
   return (
